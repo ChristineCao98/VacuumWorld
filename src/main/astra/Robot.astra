@@ -6,6 +6,15 @@ agent Robot{
 
     types robot {
         formula id(string);
+        formula nextDirection(string);
+        formula location(int, int);
+    }
+
+    rule @message(request, string sender, nextDirection(string X)) {
+        ei.move(X, 1);
+        while(~ei.task("none")){
+            S.sleep(500);
+        }
     }
 
     rule +!main([string name, string id]){
@@ -33,11 +42,7 @@ agent Robot{
             S.sleep(500);
         }
 
-        ei.move(mod.getDirection(row, col), 1);
-
-        while(~ei.task("none")){
-            S.sleep(500);
-        }
+        send(request, "main", location(x, y));
 	}
 
     

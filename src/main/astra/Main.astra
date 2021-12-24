@@ -2,7 +2,12 @@ agent Main {
     module EIS ei;
     module Console C;
     module System S;
+    module MyModule mod;
 
+    types robot {
+        formula nextDirection(string);
+        formula location(int, int);
+    }
 
     rule +!main(list args) {
         ei.launch("vw","dependency/vacuumworld-1.2.0.jar");
@@ -21,11 +26,16 @@ agent Main {
         // S.createAgent("Harry", "Robot");
         // S.setMainGoal("Harry", ["Harry"]);
 
-//        S.createAgent("Henry", "Robot");
-//        S.setMainGoal("Henry", ["Henry"]);
-
         C.println("ENDDDD");
 
     }
 
+    rule @message(request, string sender, location(int x, int y)) {
+        string col = "" + x;
+        string row = "" + y;
+        send(request, "Decco", nextDirection(mod.getDirection(row, col)));
+    }
+
+
 }
+
