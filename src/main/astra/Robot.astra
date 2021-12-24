@@ -13,16 +13,17 @@ agent Robot{
         ei.join();
         ei.link(name);
         +id(id);
+        C.println("name: " + name);
     }
 
-    rule +$ei.event(location(int x, int y)) : id(string id){
-        string row = "" + x;
-        string col = "" + y;
+    rule +$ei.event(location(int x, int y)) : id(string id) & ei.direction(string facing){
+        C.println("x: " + x + ", y: " + y);
+        string col = "" + x;
+        string row = "" + y;
         mod.updateStep(row, col, id);
-        string facing = ei.direction();
         foreach(ei.square(string squareName, string squareContents)){
             if(squareContents == "obstacle"){
-                mod.updateObstacle(row, col, squareName, facing);
+                mod.updateNonObstacle(row, col, squareName, facing);
             }
         }
     
@@ -32,7 +33,7 @@ agent Robot{
             S.sleep(500);
         }
 
-        ei.move(mod.getDirection(), 1);
+        ei.move(mod.getDirection(row, col), 1);
 
         while(~ei.task("none")){
             S.sleep(500);

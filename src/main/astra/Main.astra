@@ -16,7 +16,7 @@ agent Main {
         //}
 
         S.createAgent("Decco", "Robot");
-        S.setMainGoal("Decco", ["Decco"]);
+        S.setMainGoal("Decco", ["Decco", "2"]);
 
         // S.createAgent("Harry", "Robot");
         // S.setMainGoal("Harry", ["Harry"]);
