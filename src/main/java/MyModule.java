@@ -28,7 +28,9 @@ public class MyModule extends Module {
         //First recover the value of the last square
         if(lastRow != -1){
             visited[lastRow][lastCol] = lastVal;
-        } else {
+        } 
+        
+        if (visited[ROW][COL] == -1) {
             visited[ROW][COL] = 0;
         }
 
@@ -44,15 +46,59 @@ public class MyModule extends Module {
     }
 
     @ACTION
-    public boolean updateNonObstacle(String x, String y, String squareName, String facing){
-        //Mark the obstacle square with -1
+    public boolean updateNonObstacle(String row, String col, String squareName, String facing){
+        //Mark the non bstacle squares with 0
+        int ROW = Integer.parseInt(row);
+        int COL = Integer.parseInt(col);
+
+
+
         return true;
     }
 
     @TERM
-    public String getDirection(String x, String y){
-        //Calculate the direction that the bot should move to
-        
+    public String getDirection(String row, String col){
+        int ROW = Integer.parseInt(row);
+        int COL = Integer.parseInt(col);
+
+        //Move to the square least visited
+        String direction = "";
+        int minStep = Integer.MAX_VALUE;
+
+        if (COL != 0) {
+            int west = visited[ROW][COL - 1];
+            if (west >= 0 && west < minStep) {
+                direction = "west";
+                minStep = west;
+            }
+        }
+
+        if (ROW != 0) {
+            int north = visited[ROW - 1][COL];
+            if (north >= 0 && north < minStep) {
+                direction = "north";
+                minStep = north;
+            }
+        }
+
+        if (COL < visited[0].length - 1) {
+            int east = visited[ROW][COL + 1];
+            if (east >= 0 && east < minStep) {
+                direction = "east";
+                minStep = east;
+            }
+    
+        }
+
+        if (ROW < visited.length - 1) {
+            int south = visited[ROW + 1][COL];
+            if (south >= 0 && south < minStep) {
+                direction = "south";
+                minStep = south;
+            }
+        }
+        // TO DO: use this return, after updateNonObstacle() is done
+        // return direction;
         return "back";
     }
 
