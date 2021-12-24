@@ -1,0 +1,43 @@
+agent Robot{
+    module EIS ei;
+    module Console C;
+    module System S;
+    module MyModule mod;
+
+    types robot {
+        formula id(string);
+    }
+
+    rule +!main([string name, string id]){
+        ei.launch("vw","dependency/vacuumworld-1.2.0.jar");
+        ei.join();
+        ei.link(name);
+        +id(id);
+    }
+
+    rule +$ei.event(location(int x, int y)) : id(string id){
+        string row = "" + x;
+        string col = "" + y;
+        mod.updateStep(row, col, id);
+        string facing = ei.direction();
+        foreach(ei.square(string squareName, string squareContents)){
+            if(squareContents == "obstacle"){
+                mod.updateObstacle(row, col, squareName, facing);
+            }
+        }
+    
+        ei.clean();
+        
+        while(~ei.task("none")){
+            S.sleep(500);
+        }
+
+        ei.move(mod.getDirection(), 1);
+
+        while(~ei.task("none")){
+            S.sleep(500);
+        }
+	}
+
+    
+}
