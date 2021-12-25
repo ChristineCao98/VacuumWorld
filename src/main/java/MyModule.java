@@ -32,21 +32,16 @@ public class MyModule extends Module {
         }
     };
 
-    // //To avoid repetitive initialisation of the grid
-    // static{
-    //     // initialisation: without perceptions, all elements in the grid are seen as obstacles
-    //     for (int[] array : visited) {
-    //         Arrays.fill(array, -1);
-    //     }
-    // }
-
-    public void setAgent(Agent agent) {
-        super.setAgent(agent);
+    //Use the static statement to avoid repetitive initialisation of the grid
+    static{
         // initialisation: without perceptions, all elements in the grid are seen as obstacles
         for (int[] array : visited) {
             Arrays.fill(array, -1);
         }
-        // printGrid();
+    }
+
+    public void setAgent(Agent agent) {
+        super.setAgent(agent);
     }
 
     @ACTION
@@ -137,9 +132,7 @@ public class MyModule extends Module {
                 minStep = south;
             }
         }
-        // TO DO: use this return, after updateNonObstacle() is done
-        // return direction;
-        return "back";
+        return direction;
     }
 
     public void printGrid() {
@@ -149,6 +142,7 @@ public class MyModule extends Module {
                 System.out.print(Integer.toString(c) + " ");
             }
         }
+        System.out.println();
     }
 }
 
