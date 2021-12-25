@@ -139,6 +139,8 @@ public class MyModule extends Module {
         for (int[] row : visited) {
             System.out.println();
             for (int c : row) {
+                if (c >= 0)
+                System.out.print(" ");
                 System.out.print(Integer.toString(c) + " ");
             }
         }
