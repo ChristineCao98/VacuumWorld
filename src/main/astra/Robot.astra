@@ -6,6 +6,7 @@ agent Robot{
 
     types robot {
         formula id(string);
+        formula currentLocation(int, int);
     }
 
     rule +!main([string name, string id]){
@@ -13,13 +14,26 @@ agent Robot{
         ei.join();
         ei.link(name);
         +id(id);
+        +currentLocation(-1, -1);
         C.println("name: " + name);
     }
 
-    rule +$ei.event(location(int x, int y)) : id(string id) & ei.direction(string facing){
-        C.println("col: " + x + ", row: " + y);
-        string col = "" + x;
-        string row = "" + y;
+    rule +$ei.event(square(string squareName, string squareContents)) : currentLocation(int oldX, int oldY) & ei.location(int newX, int newY) & ei.task("none"){
+        if(oldX == newX & oldY == newY) {
+            string dir = "";
+            while (dir == "") {
+                dir = mod.getDirection("" + newY, "" + newX);
+            }
+            ei.move(dir, 1);
+        }
+    }
+
+    rule +$ei.event(location(int newX, int newY)) : id(string id) & ei.direction(string facing) & currentLocation(int oldX, int oldY){
+        -currentLocation(oldX, oldY);
+
+        C.println("col: " + newX + ", row: " + newY);
+        string col = "" + newX;
+        string row = "" + newY;
         mod.updateStep(row, col, id);
         foreach(ei.square(string squareName, string squareContents)){
             if((squareContents == "dust" | squareContents == "empty") & squareName ~= "here"){
@@ -28,16 +42,16 @@ agent Robot{
         }
     
         ei.clean();
-        
-        while(~ei.task("none")){
-            S.sleep(500);
-        }
+        wait(ei.task("none"));
 
-        ei.move(mod.getDirection(row, col), 1);
-
-        while(~ei.task("none")){
-            S.sleep(500);
+        +currentLocation(newX, newY);
+        string dir = "";
+        while (dir == "") {
+            dir = mod.getDirection("" + newY, "" + newX);
         }
+        ei.move(dir, 1);
+
+        wait(ei.task("none"));
 	}
 
     

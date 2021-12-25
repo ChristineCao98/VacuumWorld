@@ -18,11 +18,14 @@ agent Main {
         S.createAgent("Decco", "Robot");
         S.setMainGoal("Decco", ["Decco", "2"]);
 
-        // S.createAgent("Harry", "Robot");
-        // S.setMainGoal("Harry", ["Harry"]);
+        S.createAgent("Harry", "Robot");
+        S.setMainGoal("Harry", ["Harry", "3"]);
 
-//        S.createAgent("Henry", "Robot");
-//        S.setMainGoal("Henry", ["Henry"]);
+        S.createAgent("Henry", "Robot");
+        S.setMainGoal("Henry", ["Henry", "4"]);
+
+        S.createAgent("Lloyd", "Robot");
+        S.setMainGoal("Lloyd", ["Lloyd", "5"]);
 
         C.println("ENDDDD");
 
