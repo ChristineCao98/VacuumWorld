@@ -1,12 +1,44 @@
 import astra.core.Module;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import astra.core.Agent;
 
 public class MyModule extends Module {
-    static int[][] visited=new int[8][16];
+    static int[][] visited = new int[8][16];
+    static int[] row_plus = new int[]{-1, -1, -1, 0, 1, 1, 1, 0};
+    static int[] col_plus = new int[]{-1, 0, 1, 1, 1, 0, -1, -1};
     int lastRow = -1;
     int lastCol = -1;
     int lastVal = 0;
+
+    static Map<String, Integer> FACING = new HashMap<String, Integer>(){
+        {
+            put("north", 1);
+            put("east", 3);
+            put("south", 5);
+            put("west", 7);
+        }
+    };
+
+    static Map<String, Integer> SQUARENAME = new HashMap<String, Integer>(){
+        {
+            put("forward", 0);
+            put("forwardRight", 1);
+            put("right", 2);
+            put("left", 6);
+            put("forwardLeft", 7);
+        }
+    };
+
+    // //To avoid repetitive initialisation of the grid
+    // static{
+    //     // initialisation: without perceptions, all elements in the grid are seen as obstacles
+    //     for (int[] array : visited) {
+    //         Arrays.fill(array, -1);
+    //     }
+    // }
 
     public void setAgent(Agent agent) {
         super.setAgent(agent);
@@ -14,7 +46,7 @@ public class MyModule extends Module {
         for (int[] array : visited) {
             Arrays.fill(array, -1);
         }
-        printGrid();
+        // printGrid();
     }
 
     @ACTION
@@ -47,11 +79,19 @@ public class MyModule extends Module {
 
     @ACTION
     public boolean updateNonObstacle(String row, String col, String squareName, String facing){
-        //Mark the non bstacle squares with 0
+        //Mark the unvisited non-obstacle squares with 0
+
         int ROW = Integer.parseInt(row);
         int COL = Integer.parseInt(col);
 
+        int index = (SQUARENAME.get(squareName) + FACING.get(facing)) % 8;
+        int newROW = ROW + row_plus[index];
+        int newCOL = COL + col_plus[index];
 
+        //If the non-obstacle square is within the boundary and is not visited before, change its value to 0
+        if(newROW >=0 && newCOL >=0 && newROW < 8 && newCOL <16){
+            if(visited[newROW][newCOL] < 0) visited[newROW][newCOL] = 0;
+        }
 
         return true;
     }

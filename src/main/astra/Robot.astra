@@ -22,7 +22,7 @@ agent Robot{
         string row = "" + y;
         mod.updateStep(row, col, id);
         foreach(ei.square(string squareName, string squareContents)){
-            if(squareContents == "dust" | squareContents == "empty"){
+            if((squareContents == "dust" | squareContents == "empty") & squareName ~= "here"){
                 mod.updateNonObstacle(row, col, squareName, facing);
             }
         }
