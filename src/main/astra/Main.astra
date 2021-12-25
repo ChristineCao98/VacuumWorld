@@ -5,8 +5,8 @@ agent Main {
     module MyModule mod;
 
     types robot {
-        formula nextDirection(string);
-        formula location(int, int);
+        formula dummy();
+        formula numReadyRobots(int);
     }
 
     rule +!main(list args) {
@@ -23,17 +23,28 @@ agent Main {
         S.createAgent("Decco", "Robot");
         S.setMainGoal("Decco", ["Decco", "2"]);
 
-        // S.createAgent("Harry", "Robot");
-        // S.setMainGoal("Harry", ["Harry"]);
+        S.createAgent("Harry", "Robot");
+        S.setMainGoal("Harry", ["Harry", "3"]);
 
         C.println("ENDDDD");
-
+        +numReadyRobots(0);
     }
 
-    rule @message(request, string sender, location(int x, int y)) {
-        string col = "" + x;
-        string row = "" + y;
-        send(request, "Decco", nextDirection(mod.getDirection(row, col)));
+    rule @message(request, string sender, dummy()) : numReadyRobots(int count) {
+        C.println("count: ==========> " + count);
+        if (count == 1) {
+            mod.printGrid();
+            
+            -numReadyRobots(count);
+            +numReadyRobots(0);
+
+            send(request, "Decco", dummy());
+            send(request, "Harry", dummy());
+        } else {
+            -numReadyRobots(count);
+            +numReadyRobots(count + 1);
+        }
+
     }
 
 

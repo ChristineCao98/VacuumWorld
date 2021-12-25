@@ -1,4 +1,6 @@
 import astra.core.Module;
+import astra.core.Module.ACTION;
+
 import java.util.Arrays;
 import astra.core.Agent;
 
@@ -14,7 +16,6 @@ public class MyModule extends Module {
         for (int[] array : visited) {
             Arrays.fill(array, -1);
         }
-        printGrid();
     }
 
     @ACTION
@@ -41,7 +42,6 @@ public class MyModule extends Module {
         lastRow = ROW;
         lastCol = COL;
         visited[ROW][COL] = -ID;
-        printGrid();
         return true;
     }
 
@@ -102,14 +102,18 @@ public class MyModule extends Module {
         return "back";
     }
 
-    public void printGrid() {
+    @ACTION
+    public boolean printGrid() {
         for (int[] row : visited) {
-            System.out.println();
             for (int c : row) {
                 System.out.print(Integer.toString(c) + " ");
             }
+            System.out.println();
         }
+        System.out.println("==============================");
+        return true;
     }
+
 }
 
     
